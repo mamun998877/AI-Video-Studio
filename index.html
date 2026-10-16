@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>AI Video Studio</title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0b1020;
+      color: white;
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 480px;
+      margin: auto;
+      min-height: 100vh;
+      padding: 18px;
+    }
+
+
+    /* Header */
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #7c5cff;
+    }
+
+    .profile {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(
+        135deg,
+        #7c5cff,
+        #00c6ff
+      );
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-weight: bold;
+    }
+
+
+    /* Welcome */
+
+    .welcome {
+      margin-bottom: 20px;
+    }
+
+    .welcome h1 {
+      font-size: 27px;
+      margin-bottom: 7px;
+    }
+
+    .welcome p {
+      color: #9da5bd;
+      font-size: 14px;
+    }
+
+
+    /* Card */
+
+    .card {
+      background: #151b30;
+
+      border: 1px solid #252c46;
+
+      border-radius: 18px;
+
+      padding: 18px;
+
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 16px;
+
+      font-weight: bold;
+
+      margin-bottom: 12px;
+    }
+
+
+    /* Textarea */
+
+    textarea {
+
+      width: 100%;
+
+      height: 130px;
+
+      resize: none;
+
+      border: none;
+
+      outline: none;
+
+      border-radius: 12px;
+
+      padding: 14px;
+
+      background: #0d1325;
+
+      color: white;
+
+      font-size: 15px;
+    }
+
+    textarea::placeholder {
+      color: #68718a;
+    }
+
+
+    /* Buttons */
+
+    .btn {
+
+      width: 100%;
+
+      border: none;
+
+      border-radius: 12px;
+
+      padding: 14px;
+
+      margin-top: 12px;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      color: white;
+
+      cursor: pointer;
+
+      transition: 0.2s;
+    }
+
+    .primary {
+
+      background:
+        linear-gradient(
+          135deg,
+          #7c5cff,
+          #5b42e8
+        );
+    }
+
+    .secondary {
+
+      background: #222a43;
+    }
+
+    .btn:active {
+
+      transform: scale(0.97);
+
+    }
+
+
+    /* AI Tools */
+
+    .section-title {
+
+      font-size: 17px;
+
+      margin: 22px 0 12px;
+    }
+
+    .features {
+
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 12px;
+    }
+
+    .feature {
+
+      background: #151b30;
+
+      border: 1px solid #252c46;
+
+      border-radius: 16px;
+
+      padding: 18px 14px;
+
+      cursor: pointer;
+
+      transition: 0.2s;
+    }
+
+    .feature:active {
+
+      transform: scale(0.97);
+
+    }
+
+    .feature-icon {
+
+      font-size: 28px;
+
+      margin-bottom: 10px;
+    }
+
+    .feature h3 {
+
+      font-size: 14px;
+
+      margin-bottom: 5px;
+    }
+
+    .feature p {
+
+      color: #858da4;
+
+      font-size: 11px;
+
+      line-height: 1.4;
+    }
+
+
+    /* Bottom Navigation */
+
+    .bottom-nav {
+
+      position: sticky;
+
+      bottom: 10px;
+
+      margin-top: 25px;
+
+      background: #151b30;
+
+      border: 1px solid #252c46;
+
+      border-radius: 18px;
+
+      padding: 10px;
+
+      display: flex;
+
+      justify-content:
+        space-around;
+    }
+
+    .nav-item {
+
+      text-align: center;
+
+      color: #858da4;
+
+      font-size: 11px;
+
+      cursor: pointer;
+    }
+
+    .nav-item div {
+
+      font-size: 20px;
+
+      margin-bottom: 3px;
+    }
+
+    .nav-item.active {
+
+      color: #8b73ff;
+    }
+
+
+    /* Toast */
+
+    #toast {
+
+      position: fixed;
+
+      left: 50%;
+
+      bottom: 90px;
+
+      transform:
+        translateX(-50%);
+
+      background: white;
+
+      color: #111827;
+
+      padding: 12px 18px;
+
+      border-radius: 10px;
+
+      display: none;
+
+      font-size: 14px;
+
+      box-shadow:
+        0 5px 25px
+        rgba(0,0,0,.3);
+
+      z-index: 999;
+    }
+
+
+    /* Voice Status */
+
+    .voice-status {
+
+      display: none;
+
+      margin-top: 12px;
+
+      padding: 12px;
+
+      border-radius: 10px;
+
+      background: #0d1325;
+
+      color: #9da5bd;
+
+      font-size: 13px;
+
+      text-align: center;
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <div class="app">
+
+
+    <!-- Header -->
+
+    <div class="header">
+
+      <div class="logo">
+
+        AI <span>Video Studio</span>
+
+      </div>
+
+      <div class="profile">
+
+        AI
+
+      </div>
+
+    </div>
+
+
+    <!-- Welcome -->
+
+    <div class="welcome">
+
+      <h1>
+        ভিডিও তৈরি করুন 🎬
+      </h1>
+
+      <p>
+        আপনার স্ক্রিপ্ট থেকে সহজেই AI ভিডিও তৈরি করুন।
+      </p>
+
+    </div>
+
+
+    <!-- Script Card -->
+
+    <div class="card">
+
+
+      <div class="card-title">
+
+        📝 আপনার স্ক্রিপ্ট
+
+      </div>
+
+
+      <textarea
+        id="script"
+        placeholder="এখানে আপনার বাংলা স্ক্রিপ্ট লিখুন..."
+      ></textarea>
+
+
+      <!-- Voice -->
+
+      <button
+        class="btn primary"
+        onclick="generateVoice()">
+
+        🎙️ AI Voice তৈরি করুন
+
+      </button>
+
+
+      <!-- Stop -->
+
+      <button
+        class="btn secondary"
+        onclick="stopVoice()">
+
+        ⏹️ Voice বন্ধ করুন
+
+      </button>
+
+
+      <!-- Image -->
+
+      <button
+        class="btn secondary"
+        onclick="generateImage()">
+
+        🖼️ AI Image তৈরি করুন
+
+      </button>
+
+
+      <!-- Voice Status -->
+
+      <div
+        id="voiceStatus"
+        class="voice-status">
+
+        🎙️ Voice প্রস্তুত...
+
+      </div>
+
+
+    </div>
+
+
+
+    <!-- AI Tools -->
+
+    <div class="section-title">
+
+      ✨ AI Tools
+
+    </div>
+
+
+    <div class="features">
+
+
+      <!-- Voice -->
+
+      <div
+        class="feature"
+        onclick="generateVoice()">
+
+        <div class="feature-icon">
+
+          🎙️
+
+        </div>
+
+        <h3>
+          AI Voice
+        </h3>
+
+        <p>
+          বাংলা স্ক্রিপ্ট থেকে AI Voice
+        </p>
+
+      </div>
+
+
+      <!-- Image -->
+
+      <div
+        class="feature"
+        onclick="generateImage()">
+
+        <div class="feature-icon">
+
+          🖼️
+
+        </div>
+
+        <h3>
+          AI Image
+        </h3>
+
+        <p>
+          Prompt থেকে ছবি তৈরি
+        </p>
+
+      </div>
+
+
+      <!-- Editor -->
+
+      <div
+        class="feature"
+        onclick="showMessage('✂️ Video Editor পরের ধাপে আসবে')">
+
+        <div class="feature-icon">
+
+          ✂️
+
+        </div>
+
+        <h3>
+          Video Editor
+        </h3>
+
+        <p>
+          Voice, Image ও Subtitle একসাথে
+        </p>
+
+      </div>
+
+
+      <!-- Video -->
+
+      <div
+        class="feature"
+        onclick="showMessage('🎬 AI Video পরের ধাপে আসবে')">
+
+        <div class="feature-icon">
+
+          🎬
+
+        </div>
+
+        <h3>
+          AI Video
+        </h3>
+
+        <p>
+          Script থেকে ভিডিও তৈরি
+        </p>
+
+      </div>
+
+
+      <!-- MP3 -->
+
+      <div
+        class="feature"
+        onclick="showMessage('📥 MP3 Export পরের ধাপে আসবে')">
+
+        <div class="feature-icon">
+
+          📥
+
+        </div>
+
+        <h3>
+          MP3 Export
+        </h3>
+
+        <p>
+          Voice MP3 হিসেবে Save
+        </p>
+
+      </div>
+
+
+      <!-- MP4 -->
+
+      <div
+        class="feature"
+        onclick="showMessage('📥 MP4 Export পরের ধাপে আসবে')">
+
+        <div class="feature-icon">
+
+          📥
+
+        </div>
+
+        <h3>
+          MP4 Export
+        </h3>
+
+        <p>
+          তৈরি করা Video Save করুন
+        </p>
+
+      </div>
+
+
+    </div>
+
+
+
+    <!-- Bottom Navigation -->
+
+    <div class="bottom-nav">
+
+
+      <div
+        class="nav-item active"
+        onclick="showMessage('🏠 Home')">
+
+        <div>
+          🏠
+        </div>
+
+        Home
+
+      </div>
+
+
+      <div
+        class="nav-item"
+        onclick="showMessage('🎬 Projects')">
+
+        <div>
+          🎬
+        </div>
+
+        Projects
+
+      </div>
+
+
+      <div
+        class="nav-item"
+        onclick="showMessage('⚙️ Settings')">
+
+        <div>
+          ⚙️
+        </div>
+
+        Settings
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+
+  <!-- Toast -->
+
+  <div id="toast"></div>
+
+
+
+  <script>
+
+
+    /* =========================
+       Toast Message
+    ========================= */
+
+    /**
+     * @param {string} message
+     */
+
+    function showMessage(message) {
+
+      const toast =
+        document.getElementById("toast");
+
+      toast.innerText = message;
+
+      toast.style.display = "block";
+
+
+      setTimeout(function() {
+
+        toast.style.display = "none";
+
+      }, 2000);
+
+    }
+
+
+
+    /* =========================
+       Voice Status
+    ========================= */
+
+    function setVoiceStatus(message) {
+
+      const status =
+        document.getElementById(
+          "voiceStatus"
+        );
+
+      status.innerText = message;
+
+      status.style.display = "block";
+
+    }
+
+
+
+    /* =========================
+       Generate Bengali Voice
+    ========================= */
+
+    function generateVoice() {
+
+
+      const script =
+        document
+        .getElementById("script")
+        .value
+        .trim();
+
+
+      /* Empty script */
+
+      if (script === "") {
+
+        showMessage(
+          "⚠️ আগে একটি বাংলা স্ক্রিপ্ট লিখুন!"
+        );
+
+        return;
+
+      }
+
+
+      /* Browser support */
+
+      if (
+        !("speechSynthesis" in window)
+      ) {
+
+        showMessage(
+          "❌ আপনার Browser Voice Support করে না!"
+        );
+
+        return;
+
+      }
+
+
+      /* Stop previous voice */
+
+      speechSynthesis.cancel();
+
+
+      /* Create voice */
+
+      const voice =
+        new SpeechSynthesisUtterance(
+          script
+        );
+
+
+      /* Bengali Bangladesh */
+
+      voice.lang = "bn-BD";
+
+
+      /* Voice speed */
+
+      voice.rate = 0.9;
+
+
+      /* Voice pitch */
+
+      voice.pitch = 1;
+
+
+      /* Started */
+
+      voice.onstart = function() {
+
+        setVoiceStatus(
+          "🎙️ বাংলা Voice চলছে..."
+        );
+
+        showMessage(
+          "🎙️ Voice শুরু হয়েছে"
+        );
+
+      };
+
+
+      /* Finished */
+
+      voice.onend = function() {
+
+        setVoiceStatus(
+          "✅ Voice সম্পূর্ণ হয়েছে"
+        );
+
+        showMessage(
+          "✅ Voice শেষ হয়েছে"
+        );
+
+      };
+
+
+      /* Error */
+
+      voice.onerror = function() {
+
+        setVoiceStatus(
+          "❌ Voice তৈরি করা যায়নি"
+        );
+
+        showMessage(
+          "❌ Voice Error"
+        );
+
+      };
+
+
+      /* Speak */
+
+      speechSynthesis.speak(
+        voice
+      );
+
+    }
+
+
+
+    /* =========================
+       Stop Voice
+    ========================= */
+
+    function stopVoice() {
+
+
+      if (
+        "speechSynthesis"
+        in window
+      ) {
+
+        speechSynthesis.cancel();
+
+
+        setVoiceStatus(
+          "⏹️ Voice বন্ধ করা হয়েছে"
+        );
+
+
+        showMessage(
+          "⏹️ Voice বন্ধ হয়েছে"
+        );
+
+      }
+
+    }
+
+
+
+    /* =========================
+       AI Image
+    ========================= */
+
+    function generateImage() {
+
+
+      const script =
+        document
+        .getElementById("script")
+        .value
+        .trim();
+
+
+      if (script === "") {
+
+        showMessage(
+          "⚠️ আগে একটি Prompt বা Script লিখুন!"
+        );
+
+        return;
+
+      }
+
+
+      showMessage(
+        "🖼️ AI Image Generator পরের ধাপে যুক্ত হবে"
+      );
+
+    }
+
+
+  </script>
+
+
+</body>
+
+</html>
