@@ -1,8 +1,12 @@
 {
-  "name": "ai-video-studio",
+  "name": "my-local-ai-server",
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
-    "@google/genai": "latest"
+    "express": "^5.1.0",
+    "cors": "^2.8.5"
   }
 }
