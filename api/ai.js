@@ -1,7 +1,7 @@
-import OpenAI from "openai";
+import { GoogleGenAI } from "@google/genai";
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY
 });
 
 export default async function handler(req, res) {
@@ -12,42 +12,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const { type, text, prompt } = req.body || {};
-
-    // =========================
-    // AI VOICE
-    // =========================
-
-    if (type === "voice") {
-      if (!text || !text.trim()) {
-        return res.status(400).json({
-          error: "বাংলা script দিন"
-        });
-      }
-
-      const speech = await client.audio.speech.create({
-        model: "gpt-4o-mini-tts",
-        voice: "alloy",
-        input: text.trim(),
-        response_format: "mp3"
-      });
-
-      const buffer = Buffer.from(
-        await speech.arrayBuffer()
-      );
-
-      res.setHeader(
-        "Content-Type",
-        "audio/mpeg"
-      );
-
-      res.setHeader(
-        "Content-Disposition",
-        'inline; filename="ai-voice.mp3"'
-      );
-
-      return res.status(200).send(buffer);
-    }
+    const { type, prompt } = req.body || {};
 
     // =========================
     // AI IMAGE
@@ -60,25 +25,26 @@ export default async function handler(req, res) {
         });
       }
 
-      const result = await client.images.generate({
-        model: "gpt-image-1",
-        prompt: prompt.trim(),
-        size: "1024x1024"
+      const interaction = await ai.interactions.create({
+        model: "gemini-nano-banana-2.1",
+        input: prompt.trim(),
+        response_format: {
+          type: "image",
+          mime_type: "image/png",
+          aspect_ratio: "1:1"
+        }
       });
 
-      const imageBase64 =
-        result.data?.[0]?.b64_json;
+      const image = interaction.output_image;
 
-      if (!imageBase64) {
+      if (!image) {
         return res.status(500).json({
           error: "Image তৈরি করা যায়নি"
         });
       }
 
       return res.status(200).json({
-        image:
-          "data:image/png;base64," +
-          imageBase64
+        image: "data:image/png;base64," + image.data
       });
     }
 
@@ -87,16 +53,10 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-
-    console.error(
-      "OpenAI API Error:",
-      error
-    );
+    console.error("Gemini API Error:", error);
 
     return res.status(500).json({
-      error:
-        error?.message ||
-        "Server error"
+      error: error?.message || "Server error"
     });
   }
-      }
+}
